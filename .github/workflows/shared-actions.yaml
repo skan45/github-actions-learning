@@ -1,4 +1,4 @@
-name: Hello World
+name: shared actions example 
 
 on:
   workflow_dispatch:
