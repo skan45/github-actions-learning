@@ -1,0 +1,48 @@
+name: Pull request example
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+   run-integration-tests:
+     runs-on: ubuntu-latest
+
+
+
+     defaults:
+       run:
+        working-directory: typescript-project
+
+     steps:
+
+       - uses: actions/checkout@v2
+
+
+       #Setup NodeJs
+       - name: Setup NodeJs 16
+         uses: actions/setup-node@v2
+         with:
+           node-version: "16.x"
+           cache: 'npm'
+
+       #install Yarn
+       - name: Install Yarn
+         run: npm install --global yarn 
+
+       #install libraries 
+       - name: Install dependencies
+         run: yarn install --frozen-lockfile
+
+       #run linting 
+       - name: Run linting
+         run: yarn lint
+
+       #compile the code 
+       - name: Build project
+         run: yarn build 
+
+       #Run tests 
+
+       - name: Run tests
+         run: yarn test
