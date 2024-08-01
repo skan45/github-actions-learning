@@ -4,45 +4,39 @@ on:
   workflow_dispatch:
 
 jobs:
+  run-integration-tests:
+    runs-on: ubuntu-latest
 
-   run-integration-tests:
-     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
+      # Setup Node.js
+      - name: Setup NodeJs 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          cache: 'npm'
 
+      # Install Yarn
+      - name: Install Yarn
+        run: npm install --global yarn
 
-     defaults:
-       run:
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
         working-directory: typescript-project
 
-     steps:
+      # Run linting
+      - name: Run linting
+        run: yarn lint
+        working-directory: typescript-project
 
-       - uses: actions/checkout@v2
+      # Compile the code
+      - name: Build project
+        run: yarn build
+        working-directory: typescript-project
 
-
-       #Setup NodeJs
-       - name: Setup NodeJs 16
-         uses: actions/setup-node@v2
-         with:
-           node-version: "16.x"
-           cache: 'npm'
-
-       #install Yarn
-       - name: Install Yarn
-         run: npm install --global yarn 
-
-       #install libraries 
-       - name: Install dependencies
-         run: yarn install --frozen-lockfile
-
-       #run linting 
-       - name: Run linting
-         run: yarn lint
-
-       #compile the code 
-       - name: Build project
-         run: yarn build 
-
-       #Run tests 
-
-       - name: Run tests
-         run: yarn test
+      # Run tests
+      - name: Run tests
+        run: yarn test
+        working-directory: typescript-project
